@@ -1,9 +1,3 @@
-# --- Ücretsiz yapay zekâ modeli (OpenAI uyumlu uç nokta) ---
-# Varsayılan: Groq ücretsiz katmanı. Anahtar: https://console.groq.com/keys
-LLM_BASE_URL=https://api.groq.com/openai/v1
-LLM_MODEL=llama-3.3-70b-versatile
-LLM_API_KEY=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
-
 <div align="center">
 
 # 🪙 CommonFund
