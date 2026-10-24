@@ -113,8 +113,8 @@ Kontrat: [`0xC219dcE9A1EBc700a292f4b8EF03b1C0b5264FEb`](https://testnet.monadexp
 ## 🚀 Yerelde çalıştırma
 
 ```bash
-git clone <REPO_LINKI>
-cd <KLASÖR_ADI>
+git clone https://github.com/beratvarlik/commonfund.git
+cd commonfund/web
 npm install
 cp .env.example .env.local   # değerleri doldur
 npm run dev
@@ -140,6 +140,5 @@ Dürüst olmak gerekirse bu bir hackathon prototipi:
 ## 👥 Takım
 
 | Berat Varlık | Full Stack Developer|
-|---|---|
-| <İsim> | <Rol> |
+
 
