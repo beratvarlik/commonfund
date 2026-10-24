@@ -1,91 +1,136 @@
-# CommonFund
+<div align="center">
 
-Arkadaş grupları için ortak kasa. Her tur herkes eşit taksit yatırır, kurayla biri havuzu alır; herkes bir kez alana kadar sürer. Para Monad deneme ağındaki bir akıllı sözleşmede durur.
+# 🪙 CommonFund
 
-> Kurayı da kasayı da şirket değil, kod yönetsin.
+**Kurayı da kasayı da şirket değil, kod yönetsin.**
 
-## Klasörler
+Arkadaş grupları için faizsiz, şeffaf ve yapay zekâ hakemli ortak birikim sistemi.
+Monad üzerinde çalışır.
 
+![Monad](https://img.shields.io/badge/Monad-testnet-6E54FF)
+![Solidity](https://img.shields.io/badge/Solidity-0.8.x-363636)
+![Next.js](https://img.shields.io/badge/Next.js-TypeScript-000000)
+![Status](https://img.shields.io/badge/durum-hackathon%20demosu-4F46E5)
+
+[🌐 Canlı demo](<DEMO_LINKI>) · [📜 Kontrat](<EXPLORER_LINKI>) · [🎥 Demo videosu](<VIDEO_LINKI>)
+
+<img src="docs/cover.png" alt="CommonFund ekran görüntüsü" width="720">
+
+</div>
+
+---
+
+## 💡 Sorun
+
+Arkadaşlarınla birlikte biriktirip sırayla büyük bir şey (Araba, telefon, Laptop) almak isteyebilirsin.
+Bu "altın günü" mantığı yüzyıllardır var, ama iki sorunu hiç çözülmedi:
+
+- **Parayı kim tutacak?** Havuzu tutan kişiye ya da kuruma güvenmek zorundasın.
+- **Biri ödemeyi bırakırsa ne olacak?** Parayı alan kaçarsa kalanlar mağdur olur.
+- **Kura gerçekten adil mi?** Sonucu herkes göremez, itiraz edemez.
+
+## ✅ Çözüm
+
+CommonFund'da para bir akıllı kontratta durur. Kurallar herkesin görebildiği koddur:
+
+1. Üyeler gruba katılırken **teminat** kilitler.
+2. Her ay herkes **eşit taksit** yatırır.
+3. Her ay havuzu **kura ile bir üye** alır (daha önce almamış olanlar arasından).
+4. Parayı alıp ödemeyi bırakanın **teminatı otomatik kesilir**.
+5. Üç yapay zekâ agent'ı sistemi yönetir, ama **parayı hiçbiri çekemez**.
+
+## ⚙️ Nasıl çalışır?
+
+```mermaid
+flowchart LR
+    A[Grup kurulur] --> B[Üyeler teminat yatırır]
+    B --> C[Aylık taksit ödenir]
+    C --> D{Herkes ödedi mi?}
+    D -- Evet --> E[Kura çekilir]
+    D -- Hayır --> F[Mazeret bildirilir]
+    F --> G[Muhtar karar verir]
+    G -- Süre ver --> C
+    G -- Teminatı kes --> E
+    E --> H[Kazanan havuzu alır]
+    H --> C
 ```
-commonfund/
-├─ contracts/   Kasa sözleşmesi (Solidity + Hardhat) ve testleri
-└─ web/         Web uygulaması (Next.js) ve yardımcılar (Kâtip, Bekçi, Muhtar)
-```
 
-## Yardımcılar
+## 🤖 Agent'lar
 
-| Yardımcı | Ne yapar | Zincirdeki yetkisi |
+| Agent | Rolü | Neyi yapamaz? |
 |---|---|---|
-| **Kâtip** | Sohbetten grup kurallarını çıkarır, özeti onaya sunar. | Yok. Grubu kullanıcı kendi cüzdanıyla kurar. |
-| **Bekçi** | Son ödeme günü geçince gecikmeyi işaretler, mesaj bırakır, mazereti Muhtar'a iletir. Süre dolunca herkesin çağırabildiği kuralı çalıştırır. | Yalnızca `flagLate`. Paraya dokunamaz. |
-| **Muhtar** | Mazereti okur; süre verir ya da teminattan bir taksit keser. Gerekçesini zincire yazar. | Yalnızca `grantExtension` ve `slashCollateral`; yalnızca mazeret yazmış ve ödememiş üye için. |
+| **Muhtar** | Hakem. Mazereti okur, "süre ver" veya "teminatı kes" kararını verir. | Zamanında ödeyen birine ceza veremez, havuzdan para çekemez. |
+| **Kâtip** | Doğal dildeki isteği (ör. "5 kişi, ayda 10 token") kontrat parametrelerine çevirir, durumu özetler. | Hiçbir işlemi kendisi imzalayamaz. |
+| **Bekçi** | Gecikenleri izler ve uyarır. | Yalnızca okur ve bildirir. |
 
-Yardımcılar ücretsiz bir yapay zekâ modeliyle çalışır (varsayılan: Groq, `llama-3.3-70b-versatile`). Anahtar girilmezse ya da model cevap veremezse kurallı yedek cevaplar devreye girer; demo yine akar.
+> Agent'lara karar yetkisi veriyoruz, ama **sınırları kontrat çiziyor**.
 
-## Kurulum
+## 🔗 Neden blockchain olmasa olmazdı?
 
-Gerekenler: Node.js 20+, MetaMask (ya da başka bir tarayıcı cüzdanı), deneme ağı MON'u.
-Deneme ağı bilgileri ve musluk (faucet): https://docs.monad.xyz/developer-essentials/testnets
+| Geleneksel sistem | CommonFund |
+|---|---|
+| Parayı bir kişi veya şirket tutar | Parayı kontrat tutar, kimse tek başına çekemez |
+| Kura sonucuna güvenmek gerekir | Sonuç zincirde herkesin görebildiği bir işlemdir |
+| Teminat kesintisi insan kararına bağlıdır | Kesinti kod tarafından, kurala göre uygulanır |
+| Yapay zekâya hesap açılamaz | Agent'ın kendi cüzdanı var, yetkisi kodda yazılı |
 
-### 1. Sözleşme
+## 🧱 Mimari
+
+```
+┌──────────────┐     ┌────────────────┐     ┌───────────────────┐
+│  Next.js UI  │ ──► │  Agent API     │ ──► │  Monad testnet    │
+│  (wagmi)     │     │  (Muhtar,      │     │  CommonFund.sol   │
+│              │ ◄── │   Kâtip,Bekçi) │ ◄── │                   │
+└──────────────┘     └────────────────┘     └───────────────────┘
+```
+
+## 🛠️ Teknoloji
+
+- **Ağ:** Monad testnet (chain id `10143`)
+- **Kontrat:** Solidity 0.8.x
+- **Arayüz:** Next.js, TypeScript, wagmi, viem
+- **Agent'lar:** <KULLANDIĞIN MODEL/API>
+
+## 🧪 Jüri için: sistemi dene
+
+1. [Canlı demoyu](<DEMO_LINKI>) aç.
+2. **"Demoyu dene"** düğmesine bas. Hazır bir grup açılır (5 demo cüzdanı).
+3. Cüzdanlar arasında geçiş yap ("Ayşe olarak devam et" gibi), taksit öde, kura çek.
+4. Bir üye ile ödemeyi bırakıp **mazeret yaz**, Muhtar'ın kararını izle.
+5. **Doğrulama** sayfasından kontrat adresini ve işlemleri explorer'da kontrol et.
+
+> Demo için dönem süresi kısaltılmıştır. Demo cüzdanları yalnızca testnet içindir, gerçek varlık taşımaz.
+
+## 🚀 Yerelde çalıştırma
 
 ```bash
-cd contracts
+git clone <REPO_LINKI>
+cd <KLASÖR_ADI>
 npm install
-copy .env.example .env        # macOS/Linux: cp .env.example .env
+cp .env.example .env.local   # değerleri doldur
+npm run dev
 ```
 
-`.env` dosyasını doldur:
+`.env.local` içinde şunlar gerekir:
 
-- `DEPLOYER_PRIVATE_KEY`: sözleşmeyi kuracak cüzdanın özel anahtarı
-- `MUHTAR_ADDRESS`, `BEKCI_ADDRESS`: yardımcıların cüzdan adresleri (boş bırakırsan kuran cüzdan kullanılır)
+| Değişken | Açıklama |
+|---|---|
+| `NEXT_PUBLIC_CONTRACT_ADDRESS` | Deploy edilen kontrat adresi |
+| `AGENT_API_KEY` | Agent'lar için model API anahtarı |
+| `ARBITER_PRIVATE_KEY` | Muhtar'ın testnet cüzdan anahtarı (**gerçek varlık koyma**) |
 
-```bash
-npm test                # 14 test
-npm run deploy:monad    # adres web/src/lib/deployment.json dosyasına yazılır
-```
+## ⚠️ Bilinen sınırlar
 
-Sözleşmeyi değiştirirsen ABI'yi yeniden üret: `npm run compile && npm run export-abi`
+Dürüst olmak gerekirse bu bir hackathon prototipi:
 
-### 2. Web uygulaması
+- Kura rastgeleliği demo için basit bir yöntemle üretiliyor. Gerçek ürün için doğrulanabilir rastgelelik gerekir.
+- Muhtar kararları bugün tek bir hakem adresine bağlı. Sonraki adım itiraz ve çoklu hakem mekanizması.
+- Yalnızca testnet'te çalışır, gerçek para veya konut finansmanı vaat etmez.
 
-```bash
-cd web
-npm install
-copy .env.example .env.local   # macOS/Linux: cp .env.example .env.local
-```
 
-`.env.local` dosyasını doldur:
+## 👥 Takım
 
-- `MUHTAR_PRIVATE_KEY`, `BEKCI_PRIVATE_KEY`: 1. adımdaki `MUHTAR_ADDRESS` ve `BEKCI_ADDRESS` adreslerine ait anahtarlar. İkisinde de işlem ücreti için biraz MON olmalı.
-- `LLM_API_KEY`: ücretsiz Groq anahtarı (https://console.groq.com/keys). OpenRouter ya da Gemini kullanmak için `.env.example` içindeki alternatiflere bak.
+| Berat Varlık | Full Stack Developer|
+|---|---|
+| <İsim> | <Rol> |
 
-```bash
-npm run dev     # http://localhost:3000
-```
-
-## Demo akışı (yaklaşık 15 dakika)
-
-MetaMask'ta 3 hesap aç, her birine biraz MON koy. Kâtip'e "3 kişi, ayda 0,01 MON" yaz ve **Demo hızı** takvimini seç (1 tur = 10 dakika, son ödeme 5 dakika, Muhtar en fazla 3 dakika süre verebilir).
-
-1. **Grup kur**: Kâtip özeti çıkarır, "Onayla ve grubu kur" ile teminat yatırılır. Davet kodunu kopyala.
-2. **Katıl**: diğer iki hesapla `/katil?kod=…` bağlantısından teminatı yatırıp katıl. Üçüncü katılımla 1. tur başlar.
-3. **Taksit**: iki hesap taksidini öder, biri ödemez.
-4. **Gecikme**: 5 dakika sonra panel açıkken Bekçi gecikmeyi işaretler ve mesaj bırakır.
-5. **Mazeret ve karar**: geciken hesapla Mazeret sayfasında mazeret yaz. Muhtar okur, karar verir, gerekçesi zincire yazılır.
-6. **Kura**: herkesin taksiti gelince Kura sayfasında "Kura çek". Halka döner, havuz kazanana akar.
-7. **Doğrulama**: kasa adresi, Muhtar'ın yetkileri ve tüm işlem kayıtları explorer bağlantılarıyla.
-
-## Kurallar (sözleşmede sabit)
-
-- Taksit ve teminat MON olarak yatırılır; tutarlar ve tarihler grup kurulunca değişmez.
-- Herkesin taksiti gelmeden kura çekilemez. Kurayı herkes çağırabilir; havuz daha önce almamış üyelerden birine gider.
-- Son ödeme günü geçerse üye mazeret yazabilir. Muhtar en fazla `maxExtension` kadar süre verebilir ya da teminattan bir taksit tutarı kesebilir.
-- Mazeret gelmezse ya da verilen süre dolarsa taksit kural gereği teminattan karşılanır (herkes çağırabilir; Bekçi bunu otomatik yapar).
-- Grup bitince kalan teminat sahibine geri döner.
-
-## Bilinen sınırlar
-
-- Kura, deneme ağı için `block.prevrandao` ile çekilir. Gerçek parayla çalışacak bir sürümde doğrulanabilir rastgelelik (VRF) kullanılmalı.
-- Bekçi şimdilik bir grup paneli açıkken çalışır (sayfa 25 saniyede bir `/api/bekci` çağırır). Yayına alırken bunu zamanlanmış bir göreve (ör. Vercel Cron) bağlamak yeterli.
-- Muhtar ve Bekçi anahtarları sunucuda durur; `.env.local` dosyasını paylaşma.
