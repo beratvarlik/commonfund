@@ -4,7 +4,11 @@
 
 **Kurayı da kasayı da şirket değil, kod yönetsin.**
 <img width="1835" height="892" alt="image" src="https://github.com/user-attachments/assets/0f7bb8b8-f27a-4c6e-8194-2a833e34c2d5" />
+
+
 <img width="1856" height="870" alt="image" src="https://github.com/user-attachments/assets/baf74cc6-cdac-456b-9213-b59d37781b2e" />
+
+
 <img width="1832" height="888" alt="image" src="https://github.com/user-attachments/assets/2142be64-5392-4dce-9d15-a1764b23f5b3" />
 
 
@@ -97,14 +101,15 @@ flowchart LR
 
 ## 🧪 Jüri için: sistemi dene
 
-1. [Canlı demoyu](<DEMO_LINKI>) aç.
-2. **"Demoyu dene"** düğmesine bas. Hazır bir grup açılır (5 demo cüzdanı).
-3. Cüzdanlar arasında geçiş yap ("Ayşe olarak devam et" gibi), taksit öde, kura çek.
-4. Bir üye ile ödemeyi bırakıp **mazeret yaz**, Muhtar'ın kararını izle.
-5. **Doğrulama** sayfasından kontrat adresini ve işlemleri explorer'da kontrol et.
+Kontrat: [`0xC219dcE9A1EBc700a292f4b8EF03b1C0b5264FEb`](https://testnet.monadexplorer.com/address/0xC219dcE9A1EBc700a292f4b8EF03b1C0b5264FEb) (Monad testnet, doğrulanmış)
 
-> Demo için dönem süresi kısaltılmıştır. Demo cüzdanları yalnızca testnet içindir, gerçek varlık taşımaz.
+1. [Canlı demoyu](https://commonfundlive.vercel.app) aç ve **Sahne Grubu #1**'e gir (5 kişilik, taksit 1 MON, teminat 2 MON, tur süresi 90 sn).
+2. Hazır demo cüzdanlarının katıldığı grubu, havuzu ve sıradaki turu canlı izle.
+3. MetaMask'ı Monad testnet'e (chain id `10143`) bağlayıp boş yere katıl, taksit öde.
+4. Bir üye ödemeyi bıraksın, **mazeret yaz** ve **Muhtar**'ın kararını izle. Kâtip ve Bekçi'nin çıktıları da aynı ekranda.
+5. Tüm işlemleri (katılım, taksit, kura, teminat kesintisi) explorer'da kontrat adresinden doğrula.
 
+> Demo için tur süresi kısaltılmıştır. Cüzdanlar yalnızca testnet içindir, gerçek varlık taşımaz.
 ## 🚀 Yerelde çalıştırma
 
 ```bash
